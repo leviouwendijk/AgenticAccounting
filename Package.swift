@@ -30,6 +30,7 @@ let package = Package(
                 .product(name: "Accounting", package: "Accounting"),
                 .product(name: "AccountingCompiler", package: "Accounting"),
                 .product(name: "Math", package: "Math"),
+                .product(name: "AgenticMath", package: "Agentic"),
                 .product(name: "Schema", package: "Schema"),
                 .product(name: "Macros", package: "Macros"),
             ]

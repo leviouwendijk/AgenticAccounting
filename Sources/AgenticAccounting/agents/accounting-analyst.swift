@@ -1,5 +1,6 @@
 import Agentic
 import Schema
+import AgenticMath
 
 public extension Accounting.Agents {
     @Agent
@@ -27,18 +28,23 @@ public extension Accounting.Agents {
         public static let capabilities = AgentCapabilities(
             available: .init(
                 domains: [
-                    Accounting.self
+                    Accounting.self,
+                    Math.self
                 ]
             ),
             visible: .init(
                 tools: .init(
                     members: [
-                        Accounting.Tools.FinancialRatios.self
+                        Accounting.Tools.FinancialRatios.self,
+
+                        Math.Tools.Calculate.self,
+                        Math.Tools.CompareNumbers.self,
+                        Math.Tools.RatioNumbers.self,
+                        Math.Tools.AggregateNumbers.self
                     ]
                 )
             )
         )
-
         // Provider-neutral by design: host chooses the model.
     }
 }
