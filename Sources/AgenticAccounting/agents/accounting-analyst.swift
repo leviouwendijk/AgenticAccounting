@@ -1,13 +1,17 @@
 import Agentic
+import Schema
 
 public extension Accounting.Agents {
     @Agent
     enum Analyst {
-        typealias Input = String
-        typealias Output = String
+        public typealias Input = String
+        public typealias Output = String
 
-        static let purpose = "Read-only analysis of supplied accounting figures."
-        static let instructions = """
+        public static let purpose = """
+        Read-only analysis of supplied accounting figures.
+        """
+
+        public static let instructions = """
         You are an accounting analysis agent. Use the available accounting
         tools instead of independently inventing financial calculations.
         All currently installed accounting tools are visible to you.
@@ -20,12 +24,21 @@ public extension Accounting.Agents {
         Report tool errors directly. Never modify accounting records.
         """
 
-        static let capabilities = AgentCapabilities(
-            available: .init(domains: [Accounting.self]),
-            visible: .init(tools: .init(members: [
-                Accounting.Tools.FinancialRatios.self
-            ]))
+        public static let capabilities = AgentCapabilities(
+            available: .init(
+                domains: [
+                    Accounting.self
+                ]
+            ),
+            visible: .init(
+                tools: .init(
+                    members: [
+                        Accounting.Tools.FinancialRatios.self
+                    ]
+                )
+            )
         )
+
         // Provider-neutral by design: host chooses the model.
     }
 }
