@@ -1,5 +1,5 @@
 {
-  "originHash" : "0bd722be67c0d08631e7e0a0f5a206757e9b4470a9b4575d4daf7f8bac76de86",
+  "originHash" : "d4ab2585114db236c65d473057d0179a203b440f9edfaf35fa49921e2fdacac3",
   "pins" : [
     {
       "identity" : "accounting",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Accounting.git",
       "state" : {
         "branch" : "master",
-        "revision" : "a9217bef7321160175903bba53b2e762fc6409d0"
+        "revision" : "c3ec23d7f97940d50a7ab52798255305abb13298"
       }
     },
     {

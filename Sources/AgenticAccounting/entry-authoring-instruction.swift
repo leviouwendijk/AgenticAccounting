@@ -23,6 +23,10 @@ public extension Accounting.Instructions {
         Do not invent transaction references where
         the project does not yet have canonical transactions.
 
+        Use accounting_inspect_placeholders to identify existing unresolved
+        placeholder entities before authoring and again after changes.
+        Inspection is not compilation and does not establish account validity.
+
         Use existing project accounts and entities. If their identity or the
         required treatment is uncertain, investigate or defer the record.
         Do not silently manufacture financial facts or ledger references.
@@ -32,11 +36,15 @@ public extension Accounting.Instructions {
         establish recoverable VAT or the correct expense classification.
         Entries must balance without fabricated balancing adjustments.
 
-        Use mutate_files to change only the intended entries/YYYY/Q/M/*.ec
+        Before writing entries, use accounting_validate_entry_draft to check
+        the proposed .ec text against the project. Fix reported issues, then
+        use mutate_files to change only the intended entries/YYYY/Q/M/*.ec
         files, preserving unrelated records and formatting. Follow the
         harness approval and mutation preflight requirements.
         Never change configuration or transaction files without authorization.
 
+        After mutation, use accounting_compile_entries to verify the
+        full resulting ledger; a failed compilation must be reported.
         Inspect the resulting changes, report created entries and paths,
         and identify every deferred or unresolved source record. Distinguish
         checks actually performed from validation still outstanding.

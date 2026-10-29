@@ -46,6 +46,7 @@ let package = Package(
             name: "AgenticAccountingTesting",
             dependencies: [
                 "AgenticAccounting",
+                .product(name: "Accounting", package: "Accounting"),
                 .product(name: "Testing", package: "Testing"),
                 .product(name: "Agentic", package: "Agentic"),
                 .product(name: "Workspace", package: "Workspace"),
