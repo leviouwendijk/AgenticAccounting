@@ -1,5 +1,5 @@
 {
-  "originHash" : "4e74a439df6539c23c521f3a362ef140f5e1bc3185eaa5ae276e82c73bbcba76",
+  "originHash" : "0bd722be67c0d08631e7e0a0f5a206757e9b4470a9b4575d4daf7f8bac76de86",
   "pins" : [
     {
       "identity" : "accounting",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Accounting.git",
       "state" : {
         "branch" : "master",
-        "revision" : "c8bac8cdabc62c5e0b63920736a0579d50e9484b"
+        "revision" : "241362d8807b37d32a6d6558ab875d9fcd1dd5a5"
       }
     },
     {
@@ -17,6 +17,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "02b1c79397b6a7df058575cd81aedcd7f1c9c731"
+      }
+    },
+    {
+      "identity" : "agenticio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/AgenticIO.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "65fabe8d22cc6182ae872c804a6f1f8dfd80b4bf"
       }
     },
     {
@@ -53,6 +62,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "01f5f9aa53fe3dd2cb3e227117e4a850e4be05c6"
+      }
+    },
+    {
+      "identity" : "concatenation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Concatenation.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8c9314ed63ba7b8ebd1df7c729c4244a154f6286"
       }
     },
     {
@@ -214,7 +232,7 @@
       "location" : "https://github.com/leviouwendijk/Milieu.git",
       "state" : {
         "branch" : "master",
-        "revision" : "4583182baf00cccbbdd271942819c8e774cf2194"
+        "revision" : "5b6211d7b2207c8b999012584c48a33f25f15668"
       }
     },
     {
@@ -227,12 +245,21 @@
       }
     },
     {
+      "identity" : "partition",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Partition.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "75c760b64555f8b5ee170f6bc9f9e5cbf8590475"
+      }
+    },
+    {
       "identity" : "path",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/leviouwendijk/Path.git",
       "state" : {
         "branch" : "master",
-        "revision" : "eea4c72be87e58634f3654bd1783a5209fe82ff0"
+        "revision" : "dc0a6c12fb51692b1f3f4eb29c138d06de7e8eef"
       }
     },
     {
@@ -259,7 +286,7 @@
       "location" : "https://github.com/leviouwendijk/Primitives.git",
       "state" : {
         "branch" : "master",
-        "revision" : "cc5a5cef6cb9aba86ddc0e1767510e467dd6af44"
+        "revision" : "93f06221b2835f3e4a378824cde2e5752c900ba5"
       }
     },
     {

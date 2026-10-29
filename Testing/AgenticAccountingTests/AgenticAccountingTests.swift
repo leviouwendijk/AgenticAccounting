@@ -1,3 +1,4 @@
+import Agentic
 import AgenticAccounting
 import Testing
 
@@ -26,7 +27,7 @@ struct AgenticAccountingTestingMain {
 enum AgenticAccountingTestSuite {
     static let suite = TestSuite(
         "agentic-accounting",
-        title: "AgenticAccounting financial ratios"
+        title: "AgenticAccounting"
     ) {
         Test("financial-ratios-use-native-accounting-builder") {
             let output = try Accounting.Tools.FinancialRatios.evaluate(.init(
@@ -54,6 +55,48 @@ enum AgenticAccountingTestSuite {
             try Expect.equal(output.unavailable.contains("debt_to_equity"), true, "Undefined debt/equity")
             try Expect.equal(output.unavailable.contains("return_on_assets"), true, "Undefined ROA")
             try Expect.equal(output.metrics.first(where: { $0.key == "equity_ratio" })?.value, nil, "Undefined ratio is not zero")
+        }
+
+        Test("next-entry-ids-uses-authorized-project") {
+            let fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+
+            let context = try fixture.context(capabilities: [.scan, .read])
+            let tool = Accounting.Tools.NextEntryIDs()
+            let preflight = try await tool.preflight(.init(count: 3), in: context)
+            try Expect.equal(preflight.risk, .observe, "Read-only tool risk")
+            let result = try await tool.call(.init(count: 3), in: context)
+            try Expect.equal(result.existingEntryCount, 2, "Two existing IDs")
+            try Expect.equal(result.highestExistingID, 46, "Highest existing ID")
+            try Expect.equal(result.ids, [47, 48, 49], "Contiguous next ID suggestions")
+        }
+
+        Test("next-entry-ids-does-not-bypass-workspace-denials") {
+            var fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+
+            let tool = Accounting.Tools.NextEntryIDs()
+            let scanOnly = try fixture.context(capabilities: [.scan])
+            var deniedRead = false
+            do {
+                _ = try await tool.call(.init(count: 1), in: scanOnly)
+            } catch {
+                deniedRead = true
+            }
+            try Expect.equal(deniedRead, true, "Missing read grant must fail")
+
+            // Preflight succeeds with root-level read/scan, but the compiler
+            // must still refuse an .ec symlink targeting a file outside it.
+            try fixture.installEscapingSymlink()
+            let permitted = try fixture.context(capabilities: [.scan, .read])
+            _ = try await tool.preflight(.init(count: 1), in: permitted)
+            var rejectedEscapingLink = false
+            do {
+                _ = try await tool.call(.init(count: 1), in: permitted)
+            } catch {
+                rejectedEscapingLink = true
+            }
+            try Expect.equal(rejectedEscapingLink, true, "Escaping .ec symlink must be refused")
         }
 
         Test("missing-inputs-and-invalid-decimal-rejected") {
