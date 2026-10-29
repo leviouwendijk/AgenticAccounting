@@ -1,5 +1,6 @@
 import Agentic
 import AgenticAccounting
+import Foundation
 import Testing
 
 private enum AgenticAccountingTestingFailure: Error {
@@ -97,6 +98,74 @@ enum AgenticAccountingTestSuite {
                 rejectedEscapingLink = true
             }
             try Expect.equal(rejectedEscapingLink, true, "Escaping .ec symlink must be refused")
+        }
+
+        Test("used-entry-ids-reports-ranges-and-gaps") {
+            let fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+            try """
+            entry { id = 42 date = 2026-04-14 }
+            entry { id = 43 date = 2026-04-15 }
+            entry { id = 50 date = 2026-04-16 }
+            """.write(
+                to: fixture.root.appendingPathComponent("entries/2026/2/4/extra.ec"),
+                atomically: true, encoding: .utf8
+            )
+
+            let tool = Accounting.Tools.UsedEntryIDs()
+            let context = try fixture.context(capabilities: [.scan, .read])
+            let preflight = try await tool.preflight(.init(), in: context)
+            try Expect.equal(preflight.risk, .observe, "Read-only tool risk")
+            try Expect.equal(Accounting.Tools.UsedEntryIDs.definition.identifier.rawValue,
+                             "accounting_used_entry_ids", "Tool identifier")
+            let output = try await tool.call(.init(), in: context)
+            try Expect.equal(output.count, 5, "Unique used IDs")
+            try Expect.equal(output.minimum, 41, "Minimum ID")
+            try Expect.equal(output.maximum, 50, "Maximum ID")
+            try Expect.equal(output.usedRanges.map { "\($0.lower)-\($0.upper)" },
+                             ["41-43", "46-46", "50-50"], "Compressed used ranges")
+            try Expect.equal(output.gaps.map { "\($0.lower)-\($0.upper)" },
+                             ["44-45", "47-49"], "Internal gaps only")
+        }
+
+        Test("used-entry-ids-empty-ledger") {
+            let fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+            try FileManager.default.removeItem(
+                at: fixture.root.appendingPathComponent("entries/2026/2/4/main.ec")
+            )
+            let context = try fixture.context(capabilities: [.scan, .read])
+            let output = try await Accounting.Tools.UsedEntryIDs().call(.init(), in: context)
+            try Expect.equal(output.count, 0, "No used IDs")
+            try Expect.equal(output.minimum, nil, "No minimum")
+            try Expect.equal(output.maximum, nil, "No maximum")
+            try Expect.equal(output.usedRanges.isEmpty, true, "No ranges")
+            try Expect.equal(output.gaps.isEmpty, true, "No gaps")
+        }
+
+        Test("used-entry-ids-enforces-workspace-and-symlink-boundaries") {
+            var fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+            let tool = Accounting.Tools.UsedEntryIDs()
+            let scanOnly = try fixture.context(capabilities: [.scan])
+            var denied = false
+            do {
+                _ = try await tool.call(.init(), in: scanOnly)
+            } catch {
+                denied = true
+            }
+            try Expect.equal(denied, true, "No read capability must deny scan")
+
+            try fixture.installEscapingSymlink()
+            let allowed = try fixture.context(capabilities: [.scan, .read])
+            _ = try await tool.preflight(.init(), in: allowed)
+            var rejectedSymlink = false
+            do {
+                _ = try await tool.call(.init(), in: allowed)
+            } catch {
+                rejectedSymlink = true
+            }
+            try Expect.equal(rejectedSymlink, true, "Escaping .ec symlink must be refused")
         }
 
         Test("missing-inputs-and-invalid-decimal-rejected") {

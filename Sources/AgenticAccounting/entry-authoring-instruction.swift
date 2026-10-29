@@ -18,7 +18,9 @@ public extension Accounting.Instructions {
 
         Use accounting_next_entry_ids for current ID suggestions before each
         mutation batch. These are not reserved IDs. Never invent IDs or reuse
-        IDs from existing records. Do not invent transaction references where
+        IDs from existing records. Use accounting_used_entry_ids only when
+        investigating historical ID occupancy or gaps; gaps are not free IDs.
+        Do not invent transaction references where
         the project does not yet have canonical transactions.
 
         Use existing project accounts and entities. If their identity or the

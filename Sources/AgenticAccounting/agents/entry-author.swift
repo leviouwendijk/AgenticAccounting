@@ -28,6 +28,7 @@ public extension Accounting.Agents {
             ]),
             visible: .init(tools: .init(members: [
                 Accounting.Tools.NextEntryIDs.self,
+                Accounting.Tools.UsedEntryIDs.self,
                 SystemIO.Tools.SearchSources.self,
                 SystemIO.Tools.SearchFilepaths.self,
                 SystemIO.Tools.ReadFile.self,

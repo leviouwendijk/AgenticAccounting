@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Accounting.git",
       "state" : {
         "branch" : "master",
-        "revision" : "241362d8807b37d32a6d6558ab875d9fcd1dd5a5"
+        "revision" : "a9217bef7321160175903bba53b2e762fc6409d0"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/ANSI",
       "state" : {
         "branch" : "master",
-        "revision" : "073d9ca7870b688a312608acf14eae6ba052c0d6"
+        "revision" : "1849aa41c88d20c3174d0f3a1082b938c1345985"
       }
     },
     {
@@ -403,7 +403,7 @@
       "location" : "https://github.com/leviouwendijk/Terminal.git",
       "state" : {
         "branch" : "master",
-        "revision" : "dfa15c979febaf93c8165a921f69a852e4382547"
+        "revision" : "1d0b493344a85dfde4541a5dbb165efc081a5af5"
       }
     },
     {
