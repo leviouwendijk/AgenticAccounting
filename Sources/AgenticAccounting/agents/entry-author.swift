@@ -16,6 +16,8 @@ public extension Accounting.Agents {
         """
 
         public static let instructions: Instructions = [
+            .instruction(Accounting.Instructions.SourceInterpretation.definition),
+            .instruction(Accounting.Instructions.EvidenceAssessment.definition),
             .instruction(Accounting.Instructions.EntryAuthoring.definition)
         ]
 
@@ -40,6 +42,8 @@ public extension Accounting.Agents {
                 Math.Tools.AllocateNumbers.self,
                 Math.Tools.AggregateNumbers.self,
                 Standard.Tools.ClarifyWithUser.self
+            ]), inferences: .init(members: [
+                Accounting.Inferences.InterpretSourceRecord.self
             ]))
         )
     }

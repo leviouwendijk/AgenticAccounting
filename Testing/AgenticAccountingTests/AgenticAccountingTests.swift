@@ -474,6 +474,43 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(badAnchor, true, "Invalid anchor rejected")
         }
 
+        Test("accounting-agent-capability-boundaries") {
+            let inference = Accounting.Inferences.InterpretSourceRecord.definition.identifier
+            let author = Accounting.Agents.EntryAuthor.capabilities
+            let analyst = Accounting.Agents.Analyst.capabilities
+            let reviewer = Accounting.Agents.LedgerReviewer.capabilities
+            try Expect.equal(author.visible.inferences.members.contains(inference), true,
+                             "Author has typed source interpretation available")
+            try Expect.equal(reviewer.visible.inferences.members.contains(inference), true,
+                             "Reviewer shares typed source interpretation")
+            try Expect.equal(analyst.visible.tools.members.contains(
+                Accounting.Tools.CompileEntries.definition.identifier), true,
+                "Analyst can compile authorized periods")
+            try Expect.equal(reviewer.available.tools.domains.isEmpty, true,
+                             "Reviewer must not acquire whole mutable domains")
+            try Expect.equal(reviewer.available.tools.members, reviewer.visible.tools.members,
+                             "Reviewer visibility cannot expand beyond read-only allowlist")
+            try Expect.equal(reviewer.visible.tools.members.contains(where: {
+                $0.rawValue == "mutate_files"
+            }), false, "Reviewer cannot mutate files")
+        }
+
+        Test("source-interpretation-contract-records-alternatives-and-evidence") {
+            let output = Accounting.Inferences.InterpretSourceRecord.Output(
+                proposedAccount: "BLimBanRba", proposedEntity: nil,
+                vatBasis: nil, rationale: "Source is incomplete",
+                unresolved: ["invoice missing"],
+                alternativeAccounts: ["WOmzNodOdh"],
+                supportingEvidence: ["supplied record says payment"]
+            )
+            try Expect.equal(output.alternativeAccounts, ["WOmzNodOdh"],
+                             "Alternatives are retained without inventing postings")
+            try Expect.equal(output.supportingEvidence,
+                             ["supplied record says payment"], "Evidence is retained")
+            try Expect.equal(output.vatBasis, nil, "VAT basis stays unknown")
+            try Expect.equal(output.unresolved, ["invoice missing"], "Unknowns retained")
+        }
+
         Test("missing-inputs-and-invalid-decimal-rejected") {
             let empty = try Accounting.Tools.FinancialRatios.evaluate(.init(
                 assets: "0", equity: "0", liabilities: "0"
