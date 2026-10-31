@@ -511,6 +511,57 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(output.unresolved, ["invoice missing"], "Unknowns retained")
         }
 
+        Test("reference-tools-discover-resolve-and-context") {
+            let fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+            try fixture.installCompilableLedger()
+            let context = try fixture.context(capabilities: [.scan, .read])
+
+            let projectContext = try await Accounting.Tools.EntryContext().call(.init(), in: context)
+            try Expect.equal(projectContext.timezone, "Europe/Amsterdam", "Configured timezone")
+            try Expect.equal(projectContext.accountCount, 11, "Fixture chart count")
+            try Expect.equal(projectContext.entityCount, 1, "Declared entity count")
+
+            let finder = Accounting.Tools.FindReferences()
+            let bank = try await finder.call(.init(query: "Bank", kind: "account"), in: context)
+            try Expect.equal(bank.matches.first?.reference, "BLimBanRba", "Find bank by label")
+            let entity = try await finder.call(.init(query: "compiler_fixture", kind: "entity"), in: context)
+            try Expect.equal(entity.matches.count, 1, "Find declared entity")
+            let hidden = try await finder.call(.init(query: "Liquid assets", kind: "account"), in: context)
+            try Expect.equal(hidden.matches.contains { $0.reference == "BLim" }, false,
+                             "Non-postable group excluded")
+            let included = try await finder.call(
+                .init(query: "Liquid assets", kind: "account", includeNonPostable: true), in: context
+            )
+            try Expect.equal(included.matches.first?.reference, "BLim", "Explicit inclusion works")
+
+            let resolver = Accounting.Tools.ResolveReferences()
+            let checked = try await resolver.call(.init(references: [
+                .init(kind: "account", reference: "BLimBanRba"),
+                .init(kind: "account", reference: "BLim"),
+                .init(kind: "account", reference: "NOT_A_REAL_ACCOUNT"),
+                .init(kind: "entity", reference: "compiler_fixture"),
+                .init(kind: "entity", reference: "missing_entity")
+            ]), in: context)
+            try Expect.equal(checked.results.map(\.status),
+                             ["resolved", "non_postable", "not_found", "resolved", "not_found"],
+                             "Batch statuses follow input order")
+        }
+
+        Test("reference-tools-enforce-workspace-read-grants") {
+            let fixture = try NextEntryIDsWorkspaceFixture()
+            defer { fixture.cleanup() }
+            try fixture.installCompilableLedger()
+            let scanOnly = try fixture.context(capabilities: [.scan])
+            var denied = false
+            do {
+                _ = try await Accounting.Tools.FindReferences().call(
+                    .init(query: "Bank", kind: "account"), in: scanOnly
+                )
+            } catch { denied = true }
+            try Expect.equal(denied, true, "Search may not bypass missing read grant")
+        }
+
         Test("missing-inputs-and-invalid-decimal-rejected") {
             let empty = try Accounting.Tools.FinancialRatios.evaluate(.init(
                 assets: "0", equity: "0", liabilities: "0"
