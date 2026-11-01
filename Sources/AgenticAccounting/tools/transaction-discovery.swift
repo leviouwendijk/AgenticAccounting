@@ -27,13 +27,13 @@ public extension Accounting.Tools {
         public struct Input: HashableSource {
             public let ids: Discovery.IDs?
             public let text: String?
-            public let sources: [String]
-            public let statuses: [String]
+            public let sources: [String]?
+            public let statuses: [String]?
             public let counterparty: String?
             public let currency: String?
             public let amount: Amount?
             public let period: Discovery.Period?
-            public let page: Discovery.Page
+            public let page: Discovery.Page?
 
             public init(
                 ids: Discovery.IDs? = nil,
@@ -179,13 +179,13 @@ public extension Accounting.Tools {
                 predicates.append(text)
             }
             if let sources = AccountingDiscoverySupport.exactText(
-                input.sources,
+                input.sources ?? [],
                 field: "source"
             ) {
                 predicates.append(sources)
             }
             if let statuses = AccountingDiscoverySupport.exactText(
-                input.statuses,
+                input.statuses ?? [],
                 field: "status"
             ) {
                 predicates.append(statuses)
@@ -257,7 +257,7 @@ public extension Accounting.Tools {
                     .init("metadata", kind: .text, multiple: true)
                 ],
                 ordering: [.field("id", ascending: true)],
-                page: input.page
+                page: input.page ?? .init()
             )
             return .init(
                 searchedCount: result.searchedCount,

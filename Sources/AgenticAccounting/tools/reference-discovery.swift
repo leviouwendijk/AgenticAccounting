@@ -12,8 +12,8 @@ public extension Accounting.Tools {
         @JSONSchema
         public struct Input: HashableSource {
             public let text: String?
-            public let references: [String]
-            public let page: Discovery.Page
+            public let references: [String]?
+            public let page: Discovery.Page?
 
             public init(
                 text: String? = nil,
@@ -124,16 +124,16 @@ public extension Accounting.Tools {
             ) {
                 predicates.append(text)
             }
-            if !input.references.isEmpty {
+            if let references = input.references, !references.isEmpty {
                 predicates.append(
                     .any([
                         .oneOf(
                             field: "reference",
-                            values: input.references.map { .text($0) }
+                            values: references.map { .text($0) }
                         ),
                         .oneOf(
                             field: "alias",
-                            values: input.references.map { .text($0) }
+                            values: references.map { .text($0) }
                         )
                     ])
                 )
@@ -173,7 +173,7 @@ public extension Accounting.Tools {
                     .init("metadata", kind: .text, multiple: true)
                 ],
                 ordering: [.field("reference", ascending: true)],
-                page: input.page
+                page: input.page ?? .init()
             )
             return .init(
                 searchedCount: result.searchedCount,
@@ -342,9 +342,9 @@ public extension Accounting.Tools {
         public struct Input: HashableSource {
             public let text: String?
             public let ids: Discovery.IDs?
-            public let references: [String]
+            public let references: [String]?
             public let postable: Bool?
-            public let page: Discovery.Page
+            public let page: Discovery.Page?
 
             public init(
                 text: String? = nil,
@@ -459,7 +459,7 @@ public extension Accounting.Tools {
                 predicates.append(text)
             }
             if let references = AccountingDiscoverySupport.exactText(
-                input.references,
+                input.references ?? [],
                 field: "code"
             ) {
                 predicates.append(references)
@@ -489,7 +489,7 @@ public extension Accounting.Tools {
                     .init("postable", kind: .boolean)
                 ],
                 ordering: [.field("id", ascending: true)],
-                page: input.page
+                page: input.page ?? .init()
             )
             return .init(
                 searchedCount: result.searchedCount,

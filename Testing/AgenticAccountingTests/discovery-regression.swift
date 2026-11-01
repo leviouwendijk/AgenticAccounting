@@ -5,6 +5,7 @@ import Foundation
 import Testing
 
 enum AccountingDiscoveryRegression {
+    enum Failure: Error { case missingEntity }
     static func run() async throws {
         let fixture = try NextEntryIDsWorkspaceFixture()
         defer { fixture.cleanup() }
@@ -93,6 +94,53 @@ enum AccountingDiscoveryRegression {
             ["does_not_exist"],
             "Missing entity reference is explicit"
         )
+
+        let fullReference = try await Accounting.Tools.SearchEntities().call(
+            .init(text: "compiler_fixture"),
+            in: context
+        )
+        guard let canonicalEntity = fullReference.hits.first?.reference else {
+            throw AccountingDiscoveryRegression.Failure.missingEntity
+        }
+        let canonicalMatches = try await Accounting.Tools.SearchEntries().call(
+            .init(entities: [canonicalEntity]),
+            in: context
+        )
+        try Expect.equal(
+            canonicalMatches.hits.map(\.id),
+            [41],
+            "Full-chain entity filtering resolves the canonical entity"
+        )
+
+        let minimalEntryInput = try JSONDecoder().decode(
+            Accounting.Tools.SearchEntries.Input.self,
+            from: Data(#"{"text":"compiler_fixture"}"#.utf8)
+        )
+        let minimalEntrySearch = try await Accounting.Tools.SearchEntries().call(
+            minimalEntryInput,
+            in: context
+        )
+        try Expect.equal(minimalEntrySearch.matchedCount >= 0, true, "Minimal search decodes")
+
+        _ = try JSONDecoder().decode(
+            Accounting.Tools.SearchTransactions.Input.self,
+            from: Data("{}".utf8)
+        )
+        _ = try JSONDecoder().decode(
+            Accounting.Tools.SearchEntities.Input.self,
+            from: Data("{}".utf8)
+        )
+        _ = try JSONDecoder().decode(
+            Accounting.Tools.SearchAccounts.Input.self,
+            from: Data("{}".utf8)
+        )
+
+        let duplicateRequests = try await Accounting.Tools.ReadEntries().call(
+            .init(ids: .init(values: [41, 41])),
+            in: context
+        )
+        try Expect.equal(duplicateRequests.records.map(\.id), [41], "Repeated input IDs deduplicate")
+        try Expect.equal(duplicateRequests.ambiguousIDs, [], "No source ID collision")
 
         let denied = try fixture.context(capabilities: [.scan])
         var rejected = false

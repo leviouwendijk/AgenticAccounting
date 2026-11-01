@@ -13,12 +13,12 @@ public extension Accounting.Tools {
         public struct Input: HashableSource {
             public let ids: Discovery.IDs?
             public let text: String?
-            public let accounts: [String]
-            public let entities: [String]
-            public let groups: [String]
-            public let transactionIDs: [Int]
+            public let accounts: [String]?
+            public let entities: [String]?
+            public let groups: [String]?
+            public let transactionIDs: [Int]?
             public let period: Discovery.Period?
-            public let page: Discovery.Page
+            public let page: Discovery.Page?
 
             public init(
                 ids: Discovery.IDs? = nil,
@@ -94,12 +94,32 @@ public extension Accounting.Tools {
             _ input: Input,
             in context: ToolContext
         ) async throws -> ToolPreflight {
-            try AccountingDiscoverySupport.preflight(
+            let base = try AccountingDiscoverySupport.preflight(
                 context: context,
                 identifier: Self.identifier.rawValue,
                 definition: Self.definition,
                 directory: "entries",
                 summary: "Search accounting entries"
+            )
+            guard input.entities?.isEmpty == false else {
+                return base
+            }
+            let workspace = try AccountingReferenceCatalog.authorize(
+                context,
+                toolName: Self.identifier.rawValue,
+                accounts: false,
+                entities: true
+            )
+            return .init(
+                tool: Self.definition.identifier,
+                risk: Self.definition.risk,
+                summary: "Search accounting entries",
+                access: .init(
+                    targets: ["config/settings.ec", "entries", "config/entities"],
+                    roots: [workspace.rootIdentifier.rawValue],
+                    capabilities: [.read, .scan]
+                ),
+                sideEffects: []
             )
         }
 
@@ -115,6 +135,18 @@ public extension Accounting.Tools {
                 ($0.id ?? Int.max, $0.location?.description ?? "")
                     < ($1.id ?? Int.max, $1.location?.description ?? "")
             }
+            let entityStore: EntityStore?
+            if input.entities?.isEmpty == false {
+                let catalog = try AccountingReferenceCatalog.load(
+                    context,
+                    toolName: Self.identifier.rawValue,
+                    accounts: false,
+                    entities: true
+                )
+                entityStore = catalog.entities
+            } else {
+                entityStore = nil
+            }
 
             var predicates: [StructuredPredicate] = []
             if let ids = try AccountingDiscoverySupport.rangePredicate(input.ids) {
@@ -127,28 +159,28 @@ public extension Accounting.Tools {
                 predicates.append(text)
             }
             if let accounts = AccountingDiscoverySupport.exactText(
-                input.accounts,
+                input.accounts ?? [],
                 field: "account"
             ) {
                 predicates.append(accounts)
             }
             if let entities = AccountingDiscoverySupport.exactText(
-                input.entities,
+                input.entities ?? [],
                 field: "entity"
             ) {
                 predicates.append(entities)
             }
             if let groups = AccountingDiscoverySupport.exactText(
-                EntrySelect.normalizedUniqueGroups(input.groups),
+                EntrySelect.normalizedUniqueGroups(input.groups ?? []),
                 field: "group"
             ) {
                 predicates.append(groups)
             }
-            if !input.transactionIDs.isEmpty {
+            if let transactionIDs = input.transactionIDs, !transactionIDs.isEmpty {
                 predicates.append(
                     .oneOf(
                         field: "transaction_id",
-                        values: input.transactionIDs.map { .integer(Int64($0)) }
+                        values: transactionIDs.map { .integer(Int64($0)) }
                     )
                 )
             }
@@ -190,6 +222,16 @@ public extension Accounting.Tools {
                         field: "entity",
                         to: &fields
                     )
+                    if let resolved = try? entityStore?.resolve(
+                        line.entity,
+                        at: entry.location
+                    ) {
+                        AccountingDiscoverySupport.append(
+                            resolved.key.identifier(displaying: .fullchain),
+                            field: "entity",
+                            to: &fields
+                        )
+                    }
                 }
                 for group in entry.select?.groups ?? [] {
                     AccountingDiscoverySupport.append(
@@ -225,7 +267,7 @@ public extension Accounting.Tools {
                     .init("transaction_id", kind: .integer, multiple: true)
                 ],
                 ordering: [.field("id", ascending: true)],
-                page: input.page
+                page: input.page ?? .init()
             )
             return .init(
                 searchedCount: result.searchedCount,
@@ -300,7 +342,8 @@ public extension Accounting.Tools {
         public static let purpose = """
         Read complete source-parsed entries by explicit IDs or bounded inclusive ID
         range. Return existing entries even when other IDs are missing. Duplicate
-        IDs are reported as ambiguous. Decimal posting amounts are separately
+        Collisions between source entries with the same ID are ambiguous; repeated
+        requested IDs are deduplicated. Decimal posting amounts are separately
         preserved as exact strings alongside the native structured record value.
         """
         public static let risk: ActionRisk = .observe
