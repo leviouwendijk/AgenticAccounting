@@ -1,5 +1,5 @@
 {
-  "originHash" : "e7a9dfbf7f5f9697a26c2d8a66ff0d0db1521b5f036c0089a56b9101b4de1efa",
+  "originHash" : "f18eb8de3464be033ce33dad298457be4ad5e8c2ed9b6fe31f5a76b39f44e619",
   "pins" : [
     {
       "identity" : "accounting",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Accounting.git",
       "state" : {
         "branch" : "master",
-        "revision" : "7461816f61c588d2eedc6d3178c0be50fa91228e"
+        "revision" : "d49660401019b23bc5b1393cc092c4a5eb830acb"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/leviouwendijk/Agentic.git",
       "state" : {
         "branch" : "master",
-        "revision" : "b1077a687b9c67598cdd7c70396d8ce3a40fabba"
+        "revision" : "8d5ec28b1c49912006cdda5f1f9ffeb2b3f1b6e2"
       }
     },
     {
@@ -241,7 +241,7 @@
       "location" : "https://github.com/leviouwendijk/Parsing.git",
       "state" : {
         "branch" : "master",
-        "revision" : "eb15870c0eef5cf9901f032454313fe7ecf210f4"
+        "revision" : "cdd48e8533846308b01a9ced4424568bd0ab98bb"
       }
     },
     {
@@ -349,7 +349,7 @@
       "location" : "https://github.com/leviouwendijk/Search.git",
       "state" : {
         "branch" : "master",
-        "revision" : "0ad0d4d49e7a6ef5edb1ccfc1b4b1aaa5a9548f0"
+        "revision" : "c8dc4ad771dedc7a6adb05f2b59de57e40c99a8e"
       }
     },
     {

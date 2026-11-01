@@ -74,6 +74,10 @@ enum AgenticAccountingTestSuite {
             try Expect.equal(output.metrics.first(where: { $0.key == "equity_ratio" })?.value, nil, "Undefined ratio is not zero")
         }
 
+        Test("discovery-search-read-and-authorization") {
+            try await AccountingDiscoveryRegression.run()
+        }
+
         Test("next-entry-ids-uses-authorized-project") {
             let fixture = try NextEntryIDsWorkspaceFixture()
             defer { fixture.cleanup() }

@@ -30,6 +30,14 @@ public extension Accounting.Agents {
                     members: [
                         Accounting.Tools.FinancialRatios.self,
                         Accounting.Tools.CompileEntries.self,
+                        Accounting.Tools.SearchEntries.self,
+                        Accounting.Tools.ReadEntries.self,
+                        Accounting.Tools.SearchTransactions.self,
+                        Accounting.Tools.ReadTransactions.self,
+                        Accounting.Tools.SearchEntities.self,
+                        Accounting.Tools.ReadEntities.self,
+                        Accounting.Tools.SearchAccounts.self,
+                        Accounting.Tools.ReadAccounts.self,
 
                         Math.Tools.Calculate.self,
                         Math.Tools.CompareNumbers.self,
