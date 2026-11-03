@@ -533,6 +533,10 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(Inference.definition.identifier.rawValue.isEmpty, false, "Inference is registered")
         }
 
+        Test("pdf-invoice-citations-resolve-against-supplied-evidence") {
+            try PDFInvoiceCitationRegression.run()
+        }
+
         Test("source-interpretation-contract-records-alternatives-and-evidence") {
             let output = Accounting.Inferences.InterpretSourceRecord.Output(
                 proposedAccount: "BLimBanRba", proposedEntity: nil,
