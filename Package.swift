@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/leviouwendijk/Agentic.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/AgenticIO.git", branch: "master"),
+        .package(url: "https://github.com/leviouwendijk/AgenticPDF.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Workspace.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/Path.git", branch: "master"),
         .package(url: "https://github.com/leviouwendijk/IO.git", branch: "master"),
@@ -35,6 +36,7 @@ let package = Package(
                 .product(name: "Agentic", package: "Agentic"),
                 .product(name: "AgenticStandard", package: "Agentic"),
                 .product(name: "AgenticIO", package: "AgenticIO"),
+                .product(name: "AgenticPDF", package: "AgenticPDF"),
                 .product(name: "Workspace", package: "Workspace"),
                 .product(name: "Accounting", package: "Accounting"),
                 .product(name: "AccountingCompiler", package: "Accounting"),
@@ -50,6 +52,7 @@ let package = Package(
             name: "AgenticAccountingTesting",
             dependencies: [
                 "AgenticAccounting",
+                .product(name: "AgenticPDF", package: "AgenticPDF"),
                 .product(name: "Accounting", package: "Accounting"),
                 .product(name: "Testing", package: "Testing"),
                 .product(name: "Agentic", package: "Agentic"),

@@ -1,6 +1,7 @@
 import Accounting
 import Agentic
 import AgenticAccounting
+import AgenticPDF
 import Foundation
 import Testing
 
@@ -497,6 +498,39 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(reviewer.visible.tools.members.contains(where: {
                 $0.rawValue == "mutate_files"
             }), false, "Reviewer cannot mutate files")
+        }
+
+        Test("pdf-invoice-extraction-is-typed-but-not-verified") {
+            typealias Inference = Accounting.Inferences.ExtractPDFInvoice
+            let input = Inference.Input(
+                sourceFingerprint: "fnv1a64:example",
+                lines: [],
+                context: "Sample source, potentially incomplete"
+            )
+            let inputData = try JSONEncoder().encode(input)
+            let decodedInput = try JSONDecoder().decode(Inference.Input.self, from: inputData)
+            try Expect.equal(decodedInput, input, "Input retains source identity and typed PDF observations")
+
+            let output = Inference.Output(
+                kind: .invoice,
+                candidates: [
+                    .init(
+                        field: .invoice_number,
+                        rawValue: "INV-2026-041",
+                        citations: [
+                            .init(lineID: "page:0/line:0", quote: "INV-2026-041")
+                        ]
+                    )
+                ],
+                unresolved: ["Source coverage has not been established"],
+                warnings: []
+            )
+            let outputData = try JSONEncoder().encode(output)
+            let decodedOutput = try JSONDecoder().decode(Inference.Output.self, from: outputData)
+            try Expect.equal(decodedOutput, output, "Candidate citations survive serialization")
+            try Expect.equal(output.candidates[0].citations[0].lineID, "page:0/line:0", "Citation retains line identity")
+            try Expect.equal(output.unresolved.isEmpty, false, "Coverage uncertainty remains explicit")
+            try Expect.equal(Inference.definition.identifier.rawValue.isEmpty, false, "Inference is registered")
         }
 
         Test("source-interpretation-contract-records-alternatives-and-evidence") {
