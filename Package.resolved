@@ -1,5 +1,5 @@
 {
-  "originHash" : "d2a78e20ef6c75f33b373c9af45305f5bd864f62296e7793884aba913b827295",
+  "originHash" : "b449b99bbf66efe736c346e7d985af4a942a2a009825b128fefcbf771fe7a0ee",
   "pins" : [
     {
       "identity" : "accounting",
@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/AgenticPDF.git",
       "state" : {
         "branch" : "master",
-        "revision" : "1ec1fad517bf4a65d95d043342f2004921f22e8c"
+        "revision" : "a918c1d05173ee6b0314fa17338632b099ee91a4"
       }
     },
     {
@@ -259,7 +259,7 @@
       "location" : "https://github.com/leviouwendijk/Parsing.git",
       "state" : {
         "branch" : "master",
-        "revision" : "184efc55ecd5770920023b1dd8ed6dcba41a46c0"
+        "revision" : "44b54a8feabe58c06790ba68840bc127130f4ff5"
       }
     },
     {

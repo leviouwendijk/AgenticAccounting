@@ -37,6 +37,7 @@ let package = Package(
                 .product(name: "AgenticStandard", package: "Agentic"),
                 .product(name: "AgenticIO", package: "AgenticIO"),
                 .product(name: "AgenticPDF", package: "AgenticPDF"),
+                .product(name: "Path", package: "Path"),
                 .product(name: "Workspace", package: "Workspace"),
                 .product(name: "Accounting", package: "Accounting"),
                 .product(name: "AccountingCompiler", package: "Accounting"),
