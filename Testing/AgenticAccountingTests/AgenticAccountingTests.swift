@@ -541,6 +541,18 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try await PDFInvoiceSourceVerificationRegression.run()
         }
 
+        Test("pdf-invoice-number-and-date-conventions-preserve-ambiguity") {
+            try PDFInvoiceFinancialNormalizationRegression.run()
+        }
+
+        Test("pdf-invoice-inferred-conventions-remain-bounded-proposals") {
+            try PDFInvoiceConventionRegression.run()
+        }
+
+        Test("pdf-invoice-arithmetic-reports-premises-and-mismatches") {
+            try PDFInvoiceArithmeticRegression.run()
+        }
+
         Test("source-interpretation-contract-records-alternatives-and-evidence") {
             let output = Accounting.Inferences.InterpretSourceRecord.Output(
                 proposedAccount: "BLimBanRba", proposedEntity: nil,

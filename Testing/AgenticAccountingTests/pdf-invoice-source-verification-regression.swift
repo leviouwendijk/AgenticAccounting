@@ -69,6 +69,36 @@ enum PDFInvoiceSourceVerificationRegression {
         try Expect.equal(try JSONDecoder().decode(Accounting.Tools.VerifyPDFInvoiceEvidence.Output.self, from: encoded),
                          result, "Verification result JSON roundtrip")
 
+        let numericProposal = Inference.Output(
+            kind: .invoice,
+            candidates: [.init(
+                field: .gross_amount,
+                rawValue: "100.00",
+                normalizedValue: "100.00",
+                citations: [.init(lineID: line.id, quote: "100.00")]
+            )],
+            unresolved: ["Document coverage not established"],
+            warnings: []
+        )
+        let numericSource = try await tool.call(.init(
+            evidence: evidence,
+            proposal: numericProposal
+        ), in: context)
+        let normalized = PDFInvoiceFinancialNormalization(source: numericSource)
+        try Expect.equal(normalized.candidates[0].status, .resolved, "Verified amount parsed")
+        try Expect.equal(normalized.candidates[0].value, "100", "Exact decimal canonicalization")
+        try Expect.equal(normalized.candidates[0].proposalMatches, true, "Equivalent decimal values")
+        try Expect.equal(normalized.observedConventions, [.decimal_dot], "Supported notation recorded")
+        try Expect.equal(normalized.candidates[0].source.verifiedCitations,
+                         numericSource.candidates[0].verifiedCitations, "Original citations retained")
+        try Expect.equal(normalized.unresolved, ["Document coverage not established"], "Coverage unchanged")
+        let normalizedData = try JSONEncoder().encode(normalized)
+        try Expect.equal(
+            try JSONDecoder().decode(PDFInvoiceFinancialNormalization.self, from: normalizedData),
+            normalized,
+            "Normalization is serializable without losing citations"
+        )
+
         let multi = Inference.Output(
             kind: .invoice,
             candidates: [.init(
