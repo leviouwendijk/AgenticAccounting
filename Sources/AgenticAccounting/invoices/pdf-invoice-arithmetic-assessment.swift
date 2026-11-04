@@ -1,16 +1,21 @@
+import Agentic
 import Foundation
+import Macros
 import Math
+import Schema
 
 /// Checks arithmetic relations among deterministically normalized PDF claims.
 /// Proposed VAT band associations and claimed coverage are not independently
 /// established by these calculations. Nothing here determines VAT treatment.
-public struct PDFInvoiceArithmeticAssessment: Sendable, Hashable, Codable {
+@JSONSchema
+public struct PDFInvoiceArithmeticAssessment: HashableProduct {
     public typealias Normalization = PDFInvoiceFinancialNormalization
     public typealias Field = Normalization.Field
 
     /// Indices of one proposed VAT band within Normalization.candidates.
     /// The associations must be established separately from arithmetic.
-    public struct VATBand: Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct VATBand: HashableProduct {
         public let baseIndex: Int
         public let rateIndex: Int
         public let amountIndex: Int
@@ -22,14 +27,16 @@ public struct PDFInvoiceArithmeticAssessment: Sendable, Hashable, Codable {
         }
     }
 
-    public enum Kind: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public enum Kind: String, HashableProduct {
         case invoice_balance
         case vat_band
         case vat_bases_sum
         case vat_amounts_sum
     }
 
-    public enum Status: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public enum Status: String, HashableProduct {
         case exact
         case rounded
         case mismatch
@@ -37,13 +44,15 @@ public struct PDFInvoiceArithmeticAssessment: Sendable, Hashable, Codable {
         case unavailable
     }
 
-    public enum Premise: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public enum Premise: String, HashableProduct {
         case extracted_totals
         case proposed_band_association
         case claimed_band_coverage
     }
 
-    public struct Check: Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct Check: HashableProduct {
         public let premise: Premise
         public let kind: Kind
         public let bandIndex: Int?

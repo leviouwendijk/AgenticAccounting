@@ -1,15 +1,20 @@
+import Agentic
 import AgenticPDF
 import Foundation
+import Macros
 import Math
+import Schema
 
 /// Interprets source-verified invoice candidates without reclassifying their evidence.
 /// An instance is a deterministic analysis of the supplied verification output,
 /// not independent proof that the supplied output came from a tool invocation.
-public struct PDFInvoiceFinancialNormalization: Sendable, Hashable, Codable {
+@JSONSchema
+public struct PDFInvoiceFinancialNormalization: HashableProduct {
     public typealias Field = Accounting.Inferences.ExtractPDFInvoice.Output.Field
     public typealias Source = Accounting.Tools.VerifyPDFInvoiceEvidence.Output
 
-    public enum Convention: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public enum Convention: String, HashableProduct {
         case decimal_comma
         case decimal_dot
         case day_month_year
@@ -18,14 +23,16 @@ public struct PDFInvoiceFinancialNormalization: Sendable, Hashable, Codable {
         case currency_code
     }
 
-    public enum Status: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public enum Status: String, HashableProduct {
         case resolved
         case ambiguous
         case invalid
         case not_applicable
     }
 
-    public struct Interpretation: Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct Interpretation: HashableProduct {
         public let convention: Convention
         public let value: String
 
@@ -35,8 +42,10 @@ public struct PDFInvoiceFinancialNormalization: Sendable, Hashable, Codable {
         }
     }
 
-    public struct Issue: Sendable, Hashable, Codable {
-        public enum Kind: String, Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct Issue: HashableProduct {
+        @JSONSchema
+        public enum Kind: String, HashableProduct {
             case ambiguous_value
             case invalid_value
             case proposal_mismatch
@@ -48,7 +57,8 @@ public struct PDFInvoiceFinancialNormalization: Sendable, Hashable, Codable {
         public let field: Field
     }
 
-    public struct Candidate: Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct Candidate: HashableProduct {
         /// The proposal and every source-verified citation are preserved intact.
         public let source: Source.Candidate
         public let status: Status

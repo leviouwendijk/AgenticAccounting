@@ -553,6 +553,14 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try PDFInvoiceArithmeticRegression.run()
         }
 
+        Test("pdf-invoice-engine-deterministic-arithmetic-and-associations") {
+            try PDFInvoiceInterpretationRegression.run()
+        }
+
+        Test("pdf-invoice-engine-end-to-end-source-authorization") {
+            try await PDFInvoiceEngineRegression.run()
+        }
+
         Test("source-interpretation-contract-records-alternatives-and-evidence") {
             let output = Accounting.Inferences.InterpretSourceRecord.Output(
                 proposedAccount: "BLimBanRba", proposedEntity: nil,

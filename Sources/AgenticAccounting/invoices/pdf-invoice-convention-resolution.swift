@@ -1,13 +1,18 @@
+import Agentic
 import Foundation
+import Macros
+import Schema
 
 /// Checks that inferred selections exactly belong to the deterministic parse
 /// alternatives and that cited support comes from the supplied PDF evidence.
 /// A validated selection is still a model proposal, not arithmetic proof.
-public struct PDFInvoiceConventionResolution: Sendable, Hashable, Codable {
+@JSONSchema
+public struct PDFInvoiceConventionResolution: HashableProduct {
     public typealias Normalization = PDFInvoiceFinancialNormalization
     public typealias Inference = Accounting.Inferences.InferInvoiceConventions
 
-    public struct Selection: Sendable, Hashable, Codable {
+    @JSONSchema
+    public struct Selection: HashableProduct {
         public let candidateIndex: Int
         public let interpretation: Normalization.Interpretation
         /// Actual source-bound candidates, never model-created references.
