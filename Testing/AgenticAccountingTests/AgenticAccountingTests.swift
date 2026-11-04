@@ -628,6 +628,14 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(denied, true, "Search may not bypass missing read grant")
         }
 
+        Test("invoice-booking-read-only-preparation") {
+            try await InvoiceBookingRegression.run()
+        }
+
+        Test("invoice-posting-governed-and-review-required") {
+            try await InvoicePublishingRegression.run()
+        }
+
         Test("missing-inputs-and-invalid-decimal-rejected") {
             let empty = try Accounting.Tools.FinancialRatios.evaluate(.init(
                 assets: "0", equity: "0", liabilities: "0"

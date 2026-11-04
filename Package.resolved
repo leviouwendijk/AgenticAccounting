@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Accounting.git",
       "state" : {
         "branch" : "master",
-        "revision" : "d49660401019b23bc5b1393cc092c4a5eb830acb"
+        "revision" : "35098f324172f7e024f0a821ff5ca6884250f816"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/leviouwendijk/Agentic.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2cd0a20d49771c22c086bafb4156b13d19e418ae"
+        "revision" : "f40810af3bb95b9cd998131d27bcdc1f790e5ff7"
       }
     },
     {
@@ -205,7 +205,7 @@
       "location" : "https://github.com/leviouwendijk/Lexing.git",
       "state" : {
         "branch" : "master",
-        "revision" : "a7f9f6678b512399f04b41d41a40a4d41d298fe7"
+        "revision" : "9d9e38a29a365f82869585850e79f616b3b4cda9"
       }
     },
     {
@@ -259,7 +259,7 @@
       "location" : "https://github.com/leviouwendijk/Parsing.git",
       "state" : {
         "branch" : "master",
-        "revision" : "44b54a8feabe58c06790ba68840bc127130f4ff5"
+        "revision" : "e6c4cb5b7b2884dff15f12878fce80aacee3a598"
       }
     },
     {
@@ -431,6 +431,15 @@
       "state" : {
         "revision" : "869129b7bf4ecc57b97d0193ad29690ca2134750",
         "version" : "1.8.1"
+      }
+    },
+    {
+      "identity" : "syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Syntax.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fda677ccd9100cb51b0368c0ec536299ab88e99f"
       }
     },
     {
