@@ -15,10 +15,10 @@ private enum InvoiceEngineTestFailure: Error {
     case pdfCreation
 }
 
-private struct InvoiceEngineToolAdapter: ProgramToolInvoking {
+private struct InvoiceEngineToolAdapter: ProgramToolExecuting {
     let context: ToolContext
 
-    func invoke<Input: Encodable & Sendable, Output: Decodable & Sendable>(
+    func execute<Input: Encodable & Sendable, Output: Decodable & Sendable>(
         _ identifier: ToolIdentifier, input: Input, as output: Output.Type
     ) async throws -> Output {
         let payload = try JSONEncoder().encode(input)
@@ -40,7 +40,7 @@ private struct InvoiceEngineToolAdapter: ProgramToolInvoking {
     }
 }
 
-private actor InvoiceEngineInferenceAdapter: InferenceInvoking {
+private actor InvoiceEngineInferenceAdapter: ProgramInferenceExecuting {
     private var invoked: [String] = []
 
     func infer<ProgramType: Program, InferenceType: Inference>(
