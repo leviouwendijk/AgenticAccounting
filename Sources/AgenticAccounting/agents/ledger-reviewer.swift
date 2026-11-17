@@ -37,7 +37,7 @@ public extension Accounting.Agents {
                 Accounting.Tools.ReadAccounts.self,
                 SystemIO.Tools.SearchSources.self,
                 SystemIO.Tools.SearchFilepaths.self,
-                SystemIO.Tools.ReadFile.self,
+                SystemIO.Tools.ReadFiles.self,
                 Math.Tools.Calculate.self,
                 Math.Tools.CompareNumbers.self,
                 Math.Tools.AggregateNumbers.self

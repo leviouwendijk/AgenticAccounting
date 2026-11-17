@@ -51,7 +51,7 @@ public extension Accounting.Agents {
                         Accounting.Tools.ResolveReferences.self,
                         SystemIO.Tools.SearchSources.self,
                         SystemIO.Tools.SearchFilepaths.self,
-                        SystemIO.Tools.ReadFile.self,
+                        SystemIO.Tools.ReadFiles.self,
                         SystemIO.Tools.MutateFiles.self,
                         Math.Tools.Calculate.self,
                         Math.Tools.AllocateNumbers.self,
