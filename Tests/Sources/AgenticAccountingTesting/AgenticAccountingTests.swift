@@ -496,7 +496,7 @@ Test("validate-entry-draft-enforces-access-and-symlinks") {
             try Expect.equal(reviewer.available.tools.members, reviewer.visible.tools.members,
                              "Reviewer visibility cannot expand beyond read-only allowlist")
             try Expect.equal(reviewer.visible.tools.members.contains(where: {
-                $0.rawValue == "mutate_files"
+                $0.rawValue == "mutate"
             }), false, "Reviewer cannot mutate files")
         }
 

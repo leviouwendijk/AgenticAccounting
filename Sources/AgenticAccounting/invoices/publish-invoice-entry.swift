@@ -11,13 +11,13 @@ public struct AccountingInvoicePostingResult: HashableResult {
     public let status: String
     public let sourceFingerprint: String
     public let targetPath: String
-    public let mutation: SystemIO.Tools.MutateFiles.Output
+    public let mutation: SystemIO.Tools.Mutate.Output
     public let baselineEntryCount: Int
     public let verifiedEntryCount: Int?
     public let diagnostics: [String]
 
     public init(status: String, sourceFingerprint: String, targetPath: String,
-                mutation: SystemIO.Tools.MutateFiles.Output, baselineEntryCount: Int,
+                mutation: SystemIO.Tools.Mutate.Output, baselineEntryCount: Int,
                 verifiedEntryCount: Int? = nil, diagnostics: [String] = []) {
         self.status = status
         self.sourceFingerprint = sourceFingerprint
@@ -161,13 +161,13 @@ public extension Accounting.Programs {
             }
 
             // The host must execute the actual tool invocation with its mutation
-            // preflight and risk approval. Do not directly call MutateFiles.call.
-            let mutation: SystemIO.Tools.MutateFiles.Output = try await context.invoke(
-                SystemIO.Tools.MutateFiles.definition.identifier,
-                input: SystemIO.Tools.MutateFiles.Input(
+            // preflight and risk approval. Do not directly call Mutate.call.
+            let mutation: SystemIO.Tools.Mutate.Output = try await context.invoke(
+                SystemIO.Tools.Mutate.definition.identifier,
+                input: SystemIO.Tools.Mutate.Input(
                     reason: "Approved invoice from \(reference.sourceFingerprint)",
                     entries: [.init(kind: .create_text, path: draft.targetPath, content: source)]
-                ), as: SystemIO.Tools.MutateFiles.Output.self
+                ), as: SystemIO.Tools.Mutate.Output.self
             )
             guard mutation.status == "applied", mutation.creates == 1 else {
                 return .init(status: "not_confirmed_applied",

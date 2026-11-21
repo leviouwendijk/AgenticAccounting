@@ -40,7 +40,7 @@ public extension Accounting.Instructions {
 
         Before writing entries, use accounting_validate_entry_draft to check
         the proposed .ec text against the project. Fix reported issues, then
-        use mutate_files to change only the intended entries/YYYY/Q/M/*.ec
+        use mutate to change only the intended entries/YYYY/Q/M/*.ec
         files, preserving unrelated records and formatting. Follow the
         harness approval and mutation preflight requirements.
         Never change configuration or transaction files without authorization.

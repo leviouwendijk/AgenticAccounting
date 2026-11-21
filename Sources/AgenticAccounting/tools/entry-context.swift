@@ -82,7 +82,7 @@ public extension Accounting.Tools {
                     "accounting_find_references",
                     "accounting_resolve_references",
                     "accounting_validate_entry_draft",
-                    "mutate_files",
+                    "mutate",
                     "accounting_compile_entries (omit period, anchor and toDate for full-ledger verification)"
                 ]
             )

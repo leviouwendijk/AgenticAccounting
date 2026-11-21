@@ -37,7 +37,7 @@ public extension Accounting.Agents {
                 Accounting.Tools.SearchTransactions.self,
                 Accounting.Tools.ReadTransactions.self,
                 Accounting.Tools.CompileEntries.self,
-                SystemIO.Tools.MutateFiles.self
+                SystemIO.Tools.Mutate.self
             ]),
             programs: .init(members: [
                 Accounting.Programs.ProcessPDFInvoice.self,

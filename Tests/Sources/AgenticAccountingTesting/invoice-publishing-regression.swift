@@ -28,10 +28,10 @@ public enum InvoicePublishingRegression {
             Accounting.Programs.PublishInvoiceEntry.definition.identifier
         ), true, "Posting program exposed")
         try Expect.equal(scope.tools.members.contains(
-            SystemIO.Tools.MutateFiles.definition.identifier
+            SystemIO.Tools.Mutate.definition.identifier
         ), true, "Governed mutation tool exposed")
         try Expect.equal(Accounting.Agents.InvoiceReviewer.capabilities.visible.tools.members.contains(
-            SystemIO.Tools.MutateFiles.definition.identifier
+            SystemIO.Tools.Mutate.definition.identifier
         ), false, "Reviewer remains read-only")
     }
 }
